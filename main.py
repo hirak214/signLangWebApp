@@ -6,3 +6,4 @@ from matplotlib import pyplot as plt
 import time
 import mediapipe as mp
 
+# Keypoints using MP Holistic
