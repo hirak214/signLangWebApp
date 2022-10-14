@@ -2,12 +2,19 @@
 import cv2
 import numpy as np
 import os
+import csv
 from matplotlib import pyplot as plt
 import time
 import mediapipe as mp
 
-# Extract Key Point Values
 
+# Key points using MP Holistic
+
+mp_holistic = mp.solutions.holistic  # Holisitc Model
+mp_drawing = mp.solutions.drawing_utils  # Drawing utilities
+
+
+# Extract Key Point Values
 def extract_keypoints(results):
     pose = np.array([[res.x, res.y, res.z, res.visibility] for res in results.pose_landmarks.landmark]).flatten() \
         if results.pose_landmarks else np.zeros(33 * 4)  # 132
@@ -20,9 +27,45 @@ def extract_keypoints(results):
     return np.concatenate([pose, face, lh, rh])
 
 
+def mediapipe_detection(image, model):
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # COLOR CONVERSION BGR 2 RGB
+    image.flags.writeable = False  # image is no longer Writeable
+    results = model.process(image)  # make prediciton
+    image.flags.writeable = True  # image is now writeable
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)  # COLOR CONVERSION RGB 2 BGR
+    return image, results
+
+def draw_styled_landmarks(image, results):
+    # Draw Face Connections
+    mp_drawing.draw_landmarks(image, results.face_landmarks, mp_holistic.FACEMESH_TESSELATION,
+                              mp_drawing.DrawingSpec(color=(80, 110, 10), thickness=1, circle_radius=1),
+                              mp_drawing.DrawingSpec(color=(80, 256, 121), thickness=1, circle_radius=1))
+    # Draw Pose Connections
+    mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_holistic.POSE_CONNECTIONS,
+                              mp_drawing.DrawingSpec(color=(80, 22, 10), thickness=1, circle_radius=1),
+                              mp_drawing.DrawingSpec(color=(80, 44, 121), thickness=1, circle_radius=1))
+    # Draw Left Hand Connections
+    mp_drawing.draw_landmarks(image, results.left_hand_landmarks,
+                              mp_holistic.HAND_CONNECTIONS,
+                              mp_drawing.DrawingSpec(color=(121, 22, 76), thickness=1, circle_radius=1),
+                              mp_drawing.DrawingSpec(color=(121, 44, 350), thickness=1, circle_radius=1))
+    # Draw Right Hand Connections
+    mp_drawing.draw_landmarks(image, results.right_hand_landmarks,
+                              mp_holistic.HAND_CONNECTIONS,
+                              mp_drawing.DrawingSpec(color=(245, 117, 66), thickness=1, circle_radius=1),
+                              mp_drawing.DrawingSpec(color=(245, 66, 230), thickness=1, circle_radius=1))
+
+
 # Setup Folders for Collection
 
 DATA_PATH = os.path.join('MP_Data')  # Path for exported data, numpy arrays
+
+#getting dataset values from csv
+with open('datalabels.csv', newline='') as f:
+    reader = csv.reader(f)
+    data = [row[0] for row in reader]
+
+print(f"Collecting Data for: {data}")
 
 actions = np.array(['hello', 'thanks', 'iloveyou'])  # actions that we try to detect
 no_sequences = 30  # thirty videos worth of data
@@ -80,7 +123,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                 np.save(npy_path, keypoints)
 
                 # Break gracefully
-                if cv2.waitKey(10) & 0xFF == oqrd('q'):
+                if cv2.waitKey(10) & 0xFF == ord('q'):
                     break
 
     cap.release()
