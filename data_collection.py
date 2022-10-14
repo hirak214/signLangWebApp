@@ -67,7 +67,7 @@ with open('datalabels.csv', newline='') as f:
 
 print(f"Collecting Data for: {data}")
 
-actions = np.array(['hello', 'thanks', 'iloveyou'])  # actions that we try to detect
+actions = np.array(data)  # actions that we try to detect
 no_sequences = 30  # thirty videos worth of data
 sequence_length = 30  # each video is 30 frame in length
 
