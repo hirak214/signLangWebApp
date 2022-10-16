@@ -87,6 +87,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
     # NEW LOOP
     # Loop through actions
     for action in actions:
+        cv2.waitKey(10000)
         # Loop through sequences aka videos
         for sequence in range(no_sequences):
             # Loop through video length aka sequence length
