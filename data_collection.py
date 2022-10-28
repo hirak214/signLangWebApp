@@ -67,7 +67,7 @@ with open('datalabels.csv', newline='') as f:
 
 print(f"Collecting Data for: {data}")
 
-actions = np.array(['hello', 'thanks', 'iloveyou'])  # actions that we try to detect
+actions = np.array(data)  # actions that we try to detect
 no_sequences = 30  # thirty videos worth of data
 sequence_length = 30  # each video is 30 frame in length
 
@@ -87,6 +87,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
     # NEW LOOP
     # Loop through actions
     for action in actions:
+        cv2.waitKey(10000)
         # Loop through sequences aka videos
         for sequence in range(no_sequences):
             # Loop through video length aka sequence length
