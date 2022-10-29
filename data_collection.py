@@ -61,7 +61,7 @@ def draw_styled_landmarks(image, results):
 DATA_PATH = os.path.join('MP_Data')  # Path for exported data, numpy arrays
 
 #getting dataset values from csv
-with open('datalabels.csv', newline='') as f:
+with open('newlabelstrain.csv', newline='') as f:
     reader = csv.reader(f)
     data = [row[0] for row in reader]
 

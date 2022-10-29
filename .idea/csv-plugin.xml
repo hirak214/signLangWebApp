@@ -10,6 +10,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/newlabelstrain.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/try/data.csv">
           <value>
             <Attribute>
