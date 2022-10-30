@@ -11,8 +11,6 @@ from tensorflow.keras.callbacks import TensorBoard
 import csv
 
 # Key points using MP Holistic
-
-
 mp_holistic = mp.solutions.holistic  # Holisitc Model
 mp_drawing = mp.solutions.drawing_utils  # Drawing utilities
 
@@ -32,10 +30,10 @@ model.add(Dense(32, activation='relu'))
 model.add(Dense(actions.shape[0], activation='softmax'))
 
 model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
-model.load_weights('action5.h5')
+model.load_weights('action7.h5')
 sequence = []
 sentence = []
-threshold = 0.9
+threshold = 0.8
 
 
 def mediapipe_detection(image, model):
@@ -99,6 +97,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
             print(actions[np.argmax(res)])
 
             if res[np.argmax(res)] > threshold:
+                print(res[np.argmax(res)])
                 if len(sentence) > 0:
                     if actions[np.argmax(res)] != sentence[-1]:
                         sentence.append(actions[np.argmax(res)])
