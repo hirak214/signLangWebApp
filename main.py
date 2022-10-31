@@ -33,7 +33,7 @@ model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categ
 model.load_weights('action7.h5')
 sequence = []
 sentence = []
-threshold = 0.8
+threshold = 0.7
 
 
 def mediapipe_detection(image, model):
